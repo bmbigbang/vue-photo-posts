@@ -1,6 +1,16 @@
 module.exports = {
     Query: {
-        getUser: () => null
+        getPosts: async (_parent, args, { Post }) => {
+            const posts = await Post.find({}).sort({ createdDate: 'desc' })
+            // when populating
+            // property ('createdBy') in the definition will be the path specified
+            // and reference ('User') of the definition will be the model specified
+                .populate({
+                    path: 'createdBy',
+                    model: 'User'
+                });
+            return posts;
+        }
     },
     Mutation: {
         addPost: async(_parent, { title, imageUrl, categories, description, createdById }, { Post }) => {
