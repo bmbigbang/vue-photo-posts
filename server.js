@@ -1,9 +1,13 @@
 const { gql, ApolloServer } = require("apollo-server");
+const mongoose = require('mongoose');
+require('dotenv').config({ path: 'variables.env' });
 
-const todos = [
-    { task: 'Open app', completed: false },
-    { task: 'Authenticate', completed: true }
-];
+mongoose
+    .connect(
+        process.env.MONGO_URI,
+        { useNewUrlParser: true })
+    .then(() => console.log("DB connected"))
+    .catch(err => console.log(err));
 
 const typeDefs = gql`
     type Todo {
@@ -23,24 +27,17 @@ const typeDefs = gql`
 const resolvers = {
     Query: {
         getTodos: () => todos
-    },
-    Mutation: {
-        addTodo: (_parent, args) => {
-            const todo = { task: args.task, completed: args.completed }
-            todos.push(todo);
-            return todo;
-        }
     }
 };
 
 
 const server = new ApolloServer({
-    typeDefs: typeDefs,
-    resolvers: resolvers
+    typeDefs
 });
 
 
 // default port is 4000
-server.listen().then(({ url }) => {
+const PORT = process.env.PORT || 4000;
+server.listen(PORT).then(({ url }) => {
     console.log(`Server listening ${url}`);
 });
