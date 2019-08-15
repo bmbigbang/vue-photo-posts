@@ -10,15 +10,26 @@ const typeDefs = gql`
         task: String
         completed: Boolean
     }
+    
     type Query {
-        _dummy: String
+        getTodos: [Todo]
     }
 `;
 
+const resolvers = {
+    Query: {
+        getTodos: () => todos
+    }
+};
+
+
 const server = new ApolloServer({
-    typeDefs: typeDefs
+    typeDefs: typeDefs,
+    resolvers: resolvers
 });
 
+
+// default port is 4000
 server.listen().then(({ url }) => {
     console.log(`Server listening ${url}`);
 });
