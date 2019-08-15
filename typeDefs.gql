@@ -28,10 +28,12 @@ type Message {
 }
 
 type Query {
-    getUser: User
+    getPosts: [Post]
 }
 
 type Mutation {
-    signupUser(username: String!, email: String!, password: String!): User!
-
+    addPost(title: String!, imageUrl: String!, categories: [String]!, description: String!, createdById: ID!):
+        Post!
+    signupUser(username: String!, email: String!, password: String!):
+        User!
 }
