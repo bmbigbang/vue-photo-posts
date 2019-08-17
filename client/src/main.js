@@ -8,8 +8,9 @@ import '@babel/polyfill'
 Vue.config.productionTip = false;
 
 new Vue({
-    router,
-    store,
-    vuetify,
-    render: h => h(App)
+  provide: apolloProvider.provide(),
+  router,
+  store,
+  vuetify,
+  render: h => h(App)
 }).$mount('#app');

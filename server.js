@@ -23,17 +23,17 @@ mongoose
 
 // Create Apollo/GraphQL Server using typeDefs, resolvers, and context objects
 const server = new ApolloServer({
-    typeDefs,
-    context: {
-        User,
-        Post
-    },
-    resolvers
+  typeDefs,
+  context: {
+    User,
+    Post
+  },
+  resolvers
 });
 
 
 // default port is 4000
 const PORT = process.env.PORT || 4000;
 server.listen(PORT).then(({ url }) => {
-    console.log(`Server listening ${url}`);
+  console.log(`Server listening ${url}`);
 });
