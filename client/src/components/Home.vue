@@ -19,6 +19,11 @@ import { gql } from 'apollo-boost';
 
 export default {
   name: 'home',
+  data() {
+    return {
+      posts: []
+    }
+  },
   apollo: {
     getPosts: {
       query: gql`
@@ -31,7 +36,17 @@ export default {
             likes
           }
         }
-      `
+      `,
+      result(args) {
+        if (!args.loading) {
+          this.posts = args.data.getPosts;
+          console.log("[networkStatus]", args.networkStatus)
+        }
+      },
+      error(err) {
+        console.error('[Error!!]', err);
+        console.dir(err);
+      }
     }
   }
 }
