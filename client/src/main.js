@@ -18,6 +18,9 @@ const defaultClient = new ApolloClient({
 const apolloProvider = new VueApollo({ defaultClient });
 
 Vue.config.productionTip = false;
+Vue.prototype.$debugger = function() {
+  debugger;
+};
 
 new Vue({
   router,

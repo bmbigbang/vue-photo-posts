@@ -3,6 +3,7 @@
     <h1>Home</h1>
     <div v-if="$apollo.loading">Loading...</div>
     <ul v-else v-for="post in getPosts" :key="post._id">
+<!--      <h1>{{ (function(){debugger;post})() || "" }}</h1>-->
       <li>
         {{ post.title }}
         {{ post.imageUrl }}
