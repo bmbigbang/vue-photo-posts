@@ -1,9 +1,9 @@
 <template>
-  <v-app v-if="getPosts">
+  <v-app v-if="posts">
     <v-flex xs12>
       <v-carousel v-bind="{ 'cycle': true }" interval="3000">
-        <v-carousel-item v-for="post in getPosts" :key="post._id" :src="post.imageUrl">
-<!--          <h1>{{ (function(){debugger;post})() || "" }}</h1>-->
+        <v-carousel-item v-for="post in posts" :key="post._id" :src="post.imageUrl">
+<!--          <h1>{{ (function(){debugger;posts})() || "" }}</h1>-->
           <h1 id="carousel__title">{{ post.title }}</h1>
         </v-carousel-item>
       </v-carousel>
@@ -12,38 +12,22 @@
 </template>
 
 <script>
-import { gql } from 'apollo-boost';
+
 
 export default {
   name: 'home',
-  data() {
-    return {
-      posts: []
+  created() {
+    this.handleGetCarouselPosts();
+  },
+  computed: {
+    posts() {
+      return this.$store.getters.posts;
     }
   },
-  apollo: {
-    getPosts: {
-      query: gql`
-        query {
-          getPosts {
-            _id
-            title
-            imageUrl
-            description
-            likes
-          }
-        }
-      `,
-      result(args) {
-        if (!args.loading) {
-          this.posts = args.data.getPosts;
-          console.log("[networkStatus]", args.networkStatus)
-        }
-      },
-      error(err) {
-        console.error('[Error!!]', err);
-        console.dir(err);
-      }
+  methods: {
+    handleGetCarouselPosts() {
+      // fire get posts action within VueX, relaying the state management.
+      this.$store.dispatch('getPosts');
     }
   }
 }
