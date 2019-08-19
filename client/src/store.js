@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import { defaultClient as apolloClient } from './main'
-import { gql } from 'apollo-boost';
+
+import { GET_POSTS, SIGNIN_USER } from './queries'
 
 Vue.use(Vuex);
 
@@ -22,28 +23,31 @@ export default new Vuex.Store({
   actions: {
     getPosts: ({ commit }) => {
       commit('setLoading', true);
-      apolloClient.query({
-        query: gql`
-          query {
-            getPosts {
-              _id
-              title
-              imageUrl
-              description
-              likes
-            }
-          }
-        `,
-      }).then(({ data }) => {
-        // mutate the state with new data
-        // commit passes data from actions to mutation functions
-        commit('setPosts', data.getPosts);
-        commit('setLoading', false);
-      }).catch(err => {
-        commit('setLoading', false);
-        console.error(err);
-        console.dir(err);
-      })
+      apolloClient
+          .query({
+            query: GET_POSTS
+          }).then(({ data }) => {
+            // mutate the state with new data
+            // commit passes data from actions to mutation functions
+            commit('setPosts', data.getPosts);
+            commit('setLoading', false);
+          }).catch(err => {
+            commit('setLoading', false);
+            console.error(err);
+            console.dir(err);
+          })
+    },
+    signInUser: ({ commit }, payload) => {
+      apolloClient
+          .mutate({
+            mutation: SIGNIN_USER,
+            variables: payload
+          }).then(({ data }) => {
+            console.log(data.signInUser);
+          }).catch(err => {
+            console.error(err);
+            console.dir(err);
+          })
     }
   },
   getters: {

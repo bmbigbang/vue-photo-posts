@@ -1,3 +1,11 @@
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const createToken = (user, secret, expiresIn) => {
+  const { username, email } = user;
+  return jwt.sign({ username, email }, secret, { expiresIn });
+};
+
 module.exports = {
   Query: {
     getPosts: async (_parent, args, { Post }) => {
@@ -19,13 +27,29 @@ module.exports = {
         createdBy: createdById
       }).save();
     },
-    signupUser: async (_parent, { username, email, password }, { User }) => {
+    signInUser: async (_parent, { username, password }, { User }) => {
+      const user = await User.findOne({ username });
+      if (!user) {
+        throw new Error('User not registered');
+      }
+
+      // compare input password to hashed stored pass
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
+        throw new Error('Invalid password');
+      }
+
+      return { token: createToken(user, process.env.SECRET, '1hr') }
+    },
+    signUpUser: async (_parent, { username, email, password }, { User }) => {
       const user = await User.findOne({ username });
       if (user) throw new Error('User already exists');
 
-      return await new User({
+      const newUser = await new User({
         username, email, password
       }).save();
+
+      return { token: createToken(newUser, process.env.SECRET, '1hr') }
     }
   }
 };
