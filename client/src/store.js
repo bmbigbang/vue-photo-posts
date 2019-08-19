@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 import { defaultClient as apolloClient } from './main'
 
-import { GET_POSTS, SIGNIN_USER } from './queries'
+import { GET_POSTS, SIGNIN_USER, GET_CURRENT_USER } from './queries'
 
 Vue.use(Vuex);
 
@@ -21,6 +21,21 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    getCurrentUser: ({ commit }) => {
+      commit('setLoading', true);
+      apolloClient.query({
+        query: GET_CURRENT_USER
+      })
+          .then(({ data }) => {
+            commit('setLoading', false);
+            console.log(data.getCurrentUser);
+      })
+          .catch(err => {
+            commit('setLoading', false);
+            console.error(err);
+            console.dir(err);
+          })
+    },
     getPosts: ({ commit }) => {
       commit('setLoading', true);
       apolloClient
@@ -43,7 +58,7 @@ export default new Vuex.Store({
             mutation: SIGNIN_USER,
             variables: payload
           }).then(({ data }) => {
-            console.log(data.signInUser);
+            localStorage.setItem('token', data.signInUser.token);
           }).catch(err => {
             console.error(err);
             console.dir(err);
