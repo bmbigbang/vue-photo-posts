@@ -49,7 +49,7 @@
 <script>
   export default {
     name: "signIn",
-    date() {
+    data() {
       return {
         username: '',
         password: ''
