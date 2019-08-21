@@ -19,6 +19,14 @@
             {{ item.title }}
           </v-list-item-content>
         </v-list-item>
+
+        <!-- Sign Out Button -->
+        <v-list-item v-if="user">
+          <v-list-item-action>
+            <v-icon>exit_to_app</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>Sign Out</v-list-item-content>
+        </v-list-item>
       </v-list>
 
     </v-navigation-drawer>
@@ -43,6 +51,21 @@
           <v-icon class="hidden-sm-only" left>{{ item.icon }}</v-icon>
           {{ item.title }}
         </v-btn>
+
+        <!-- Profile Button -->
+        <v-btn flat to="/profile" v-if="user">
+          <v-icon class="hidden-sm-only" left>account_box</v-icon>
+          <v-badge right color="blue darken-2">
+            <span slot="badge">1</span>
+            Profile
+          </v-badge>
+        </v-btn>
+
+        <!-- Sign Out Button -->
+        <v-btn flat v-if="user">
+          <v-icon class="hidden-sm-only" left>exit_to_app</v-icon>
+          Sign Out
+        </v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <main>
@@ -56,6 +79,8 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
     name: 'App',
     data() {
@@ -64,19 +89,38 @@
       };
     },
     computed: {
+      ...mapGetters(['user']),
       horizontalNavItems() {
-        return [
-          { icon: 'chat', title: 'Posts', link: '/posts' },
-          { icon: 'lock_open', title: 'Sign In', link: '/signin' },
-          { icon: 'create', title: 'Sign Up', link: '/signup'}
-        ]
+        let navButtons;
+        if (this.user) {
+          navButtons = [
+            { icon: 'chat', title: 'Posts', link: '/posts' }
+          ];
+        } else {
+          navButtons = [
+            { icon: 'chat', title: 'Posts', link: '/posts' },
+            { icon: 'lock_open', title: 'Sign In', link: '/signin' },
+            { icon: 'create', title: 'Sign Up', link: '/signup'}
+          ];
+        }
+        return navButtons;
       },
       sideNavItems() {
-        return [
-          { icon: 'chat', title: 'Posts', link: '/posts' },
-          { icon: 'lock_open', title: 'Sign In', link: '/signin' },
-          { icon: 'create', title: 'Sign Up', link: '/signup'}
-        ]
+        let sideNavButtons;
+        if (this.user) {
+          sideNavButtons = [
+            { icon: 'chat', title: 'Posts', link: '/posts' },
+            { icon: 'stars', title: 'Create Post', link: '/post/add' },
+            { icon: 'account_box', title: 'Profile', link: '/profile' }
+          ]
+        } else {
+          sideNavButtons = [
+            { icon: 'chat', title: 'Posts', link: '/posts' },
+            { icon: 'lock_open', title: 'Sign In', link: '/signin' },
+            { icon: 'create', title: 'Sign Up', link: '/signup'}
+          ]
+        }
+        return sideNavButtons;
       }
     },
     methods: {
