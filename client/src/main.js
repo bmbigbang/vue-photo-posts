@@ -5,8 +5,11 @@ import store from './store'
 import vuetify from './plugins/vuetify';
 import '@babel/polyfill'
 
-import ApolloClient from 'apollo-boost';
+import FormAlert from './components/shared/FormAlert'
 
+Vue.component('form-alert', FormAlert);
+
+import ApolloClient from 'apollo-boost';
 import VueApollo from 'vue-apollo';
 
 Vue.use(VueApollo);

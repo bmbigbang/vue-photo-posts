@@ -4,6 +4,16 @@
       <v-layout row wrap>
         <v-flex xs12 sm6 offset-sm3>
           <h1 style="text-align: center;">Sign In</h1>
+          <!-- Error Alert -->
+          <v-card v-if="error" color="secondary" dark>
+            <form-alert :message="error.message"></form-alert>
+          </v-card>
+        </v-flex>
+      </v-layout>
+
+      <!-- Sign In form -->
+      <v-layout row wrap>
+        <v-flex xs12 sm6 offset-sm3>
           <v-card color="secondary" dark>
             <v-container>
               <v-form @submit.prevent="handleSignInUser">
@@ -58,7 +68,7 @@
       };
     },
     computed: {
-      ...mapGetters(['user'])
+      ...mapGetters(['user', 'error'])
     },
     watch: {
       user(value) {
