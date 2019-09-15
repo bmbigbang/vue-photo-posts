@@ -7,6 +7,8 @@ import Profile from "./components/Profile";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 
+import AuthGuard from "./AuthGuard"
+
 Vue.use(Router);
 
 export default new Router({
@@ -21,7 +23,8 @@ export default new Router({
     {
       path: '/profile',
       name: 'profile',
-      component: Profile
+      component: Profile,
+      beforeEnter: AuthGuard
     },
     {
       path: '/post/add',
@@ -43,5 +46,12 @@ export default new Router({
       name: 'signUp',
       component: SignUp
     },
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({ x: 0, y: 0 })
+      }, 200)
+    })
+  }
 })
