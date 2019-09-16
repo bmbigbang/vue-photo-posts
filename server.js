@@ -27,7 +27,8 @@ const getUser = async token => {
   if (token) {
     try {
       return await jwt.verify(token, process.env.SECRET);
-    } catch (err) {
+    }
+    catch (err) {
       throw new AuthenticationError('Your session has ended. Pleasee sign in again.');
     }
   }
@@ -41,6 +42,10 @@ const server = new ApolloServer({
     origin: '*',
     credentials: true
   },
+  formatError: (error) => ({
+    name: error.name,
+    message: error.message.replace("Context creation failed:", "")
+  }),
   context: async ({ req }) => {
     const token = req.headers['authorization'];
     return { User, Post, currentUser: await getUser(token) };
