@@ -35,7 +35,13 @@
                 <v-layout row>
                   <v-flex>
                     <v-card-actions class="justify-center">
-                      <v-btn accent type="submit">Sign In</v-btn>
+                      <v-btn accent :loading="loading" type="submit">
+                        <template v-slot:loader>
+                          <span class="custom-loader">
+                            <v-icon light>cached</v-icon>
+                          </span>
+                        </template>
+                        Sign In</v-btn>
                     </v-card-actions>
                     <div style="text-align: center;">
                       <h3>Don't have an account?
@@ -68,7 +74,7 @@
       };
     },
     computed: {
-      ...mapGetters(['user', 'error'])
+      ...mapGetters(['user', 'error', 'loading'])
     },
     watch: {
       user(value) {
@@ -87,3 +93,42 @@
     }
   }
 </script>
+
+<style>
+  .custom-loader {
+    animation: loader 1s infinite;
+    display: flex;
+  }
+  @-moz-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-o-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
