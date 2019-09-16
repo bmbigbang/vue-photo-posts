@@ -16,18 +16,19 @@
         <v-flex xs12 sm6 offset-sm3>
           <v-card color="secondary" dark>
             <v-container>
-              <v-form @submit.prevent="handleSignInUser">
+              <v-form v-model="isFormValid" lazy-validation ref="form"
+                      @submit.prevent="handleSignInUser">
 
                 <v-layout row>
                   <v-flex ml-4 mr-4>
-                    <v-text-field v-model="username" prepend-icon="face" label="Username" type="text"
+                    <v-text-field :rules="usernameRules" v-model="username" prepend-icon="face" label="Username" type="text"
                                   required></v-text-field>
                   </v-flex>
                 </v-layout>
 
                 <v-layout row>
                   <v-flex ml-4 mr-4>
-                    <v-text-field v-model="password" prepend-icon="extension" label="password" type="password"
+                    <v-text-field :rules="passwordRules" v-model="password" prepend-icon="extension" label="password" type="password"
                                   required></v-text-field>
                   </v-flex>
                 </v-layout>
@@ -35,7 +36,7 @@
                 <v-layout row>
                   <v-flex>
                     <v-card-actions class="justify-center">
-                      <v-btn accent :loading="loading" type="submit">
+                      <v-btn accent :loading="loading" :disabled="!isFormValid" type="submit">
                         <template v-slot:loader>
                           <span class="custom-loader">
                             <v-icon light>cached</v-icon>
@@ -69,8 +70,18 @@
     name: "signIn",
     data() {
       return {
+        isFormValid: true,
         username: '',
-        password: ''
+        password: '',
+        usernameRules: [
+          username => !!username || "Username is required",
+          username => username.length <= 10 || "Username must be between 2 to 10 characters",
+          username => username.length >= 2 || "Username must be between 2 to 10 characters"
+        ],
+        passwordRules: [
+          password => !!password || 'Password is required',
+          password => password.length >= 4 || 'Password must be at least 7 characeters'
+        ]
       };
     },
     computed: {
@@ -85,10 +96,13 @@
     },
     methods: {
       handleSignInUser() {
-        this.$store.dispatch('signInUser', {
-          username: this.username,
-          password: this.password
-        });
+        // validate using rules accessed by ref before submitting
+        if (this.$refs.form.validate()) {
+          this.$store.dispatch('signInUser', {
+            username: this.username,
+            password: this.password
+          });
+        }
       }
     }
   }
