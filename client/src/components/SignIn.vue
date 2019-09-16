@@ -21,14 +21,16 @@
 
                 <v-layout row>
                   <v-flex ml-4 mr-4>
-                    <v-text-field :rules="usernameRules" v-model="username" prepend-icon="face" label="Username" type="text"
+                    <v-text-field :rules="usernameRules" v-model="username"
+                                  prepend-icon="face" label="Username" type="text"
                                   required></v-text-field>
                   </v-flex>
                 </v-layout>
 
                 <v-layout row>
                   <v-flex ml-4 mr-4>
-                    <v-text-field :rules="passwordRules" v-model="password" prepend-icon="extension" label="password" type="password"
+                    <v-text-field :rules="passwordRules" v-model="password"
+                                  prepend-icon="extension" label="Password" type="password"
                                   required></v-text-field>
                   </v-flex>
                 </v-layout>
@@ -36,7 +38,8 @@
                 <v-layout row>
                   <v-flex>
                     <v-card-actions class="justify-center">
-                      <v-btn accent :loading="loading" :disabled="!isFormValid" type="submit">
+                      <v-btn accent :loading="loading" :disabled="!isFormValid || loading"
+                             type="submit">
                         <template v-slot:loader>
                           <span class="custom-loader">
                             <v-icon light>cached</v-icon>
@@ -64,48 +67,48 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
-  export default {
-    name: "signIn",
-    data() {
-      return {
-        isFormValid: true,
-        username: '',
-        password: '',
-        usernameRules: [
-          username => !!username || "Username is required",
-          username => username.length <= 10 || "Username must be between 2 to 10 characters",
-          username => username.length >= 2 || "Username must be between 2 to 10 characters"
-        ],
-        passwordRules: [
-          password => !!password || 'Password is required',
-          password => password.length >= 4 || 'Password must be at least 7 characeters'
-        ]
-      };
-    },
-    computed: {
-      ...mapGetters(['user', 'error', 'loading'])
-    },
-    watch: {
-      user(value) {
-        if (value) {
-          this.$router.push('/');
-        }
+export default {
+  name: "signIn",
+  data() {
+    return {
+      isFormValid: true,
+      username: '',
+      password: '',
+      usernameRules: [
+        username => !!username || "Username is required",
+        username => username.length <= 10 || "Username must be between 2 to 10 characters",
+        username => username.length >= 2 || "Username must be between 2 to 10 characters"
+      ],
+      passwordRules: [
+        password => !!password || 'Password is required',
+        password => password.length >= 4 || 'Password must be at least 4 characters'
+      ]
+    };
+  },
+  computed: {
+    ...mapGetters(['user', 'error', 'loading'])
+  },
+  watch: {
+    user(value) {
+      if (value) {
+        this.$router.push('/');
       }
-    },
-    methods: {
-      handleSignInUser() {
-        // validate using rules accessed by ref before submitting
-        if (this.$refs.form.validate()) {
-          this.$store.dispatch('signInUser', {
-            username: this.username,
-            password: this.password
-          });
-        }
+    }
+  },
+  methods: {
+    handleSignInUser() {
+      // validate using rules accessed by ref before submitting
+      if (this.$refs.form.validate()) {
+        this.$store.dispatch('signInUser', {
+          username: this.username,
+          password: this.password
+        });
       }
     }
   }
+}
 </script>
 
 <style>
