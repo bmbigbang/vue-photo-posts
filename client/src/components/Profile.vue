@@ -1,7 +1,11 @@
 <template>
-  <v-app>
+  <v-container text-center mt-4 pt-4>
+    <v-layout row wrap>
+      <v-flex xs12 sm6 offset-sm3>
     <h1>Profile</h1>
-  </v-app>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>

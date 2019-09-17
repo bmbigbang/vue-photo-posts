@@ -1,5 +1,5 @@
 <template>
-  <v-app v-if="posts">
+  <v-container text-center mt-4 pt-4 v-if="posts">
     <v-layout row>
       <v-dialog v-model="loading" persistent fullscreen>
         <v-container fill-height>
@@ -18,7 +18,7 @@
         </v-carousel-item>
       </v-carousel>
     </v-flex>
-  </v-app>
+  </v-container>
 </template>
 
 <script>

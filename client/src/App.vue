@@ -1,5 +1,5 @@
 <template>
-  <v-app style="background: #E3E3EE">
+  <v-app light>
     <v-navigation-drawer app temporary fixed v-model="sideNav">
       <v-toolbar color="accent" dark flat>
         <v-app-bar-nav-icon @click="toggleSideNav"></v-app-bar-nav-icon>
@@ -31,7 +31,7 @@
 
     </v-navigation-drawer>
 
-    <v-toolbar fixed color="primary" dark>
+    <v-app-bar fixed color="primary" dark>
       <v-app-bar-nav-icon @click="toggleSideNav"></v-app-bar-nav-icon>
       <v-toolbar-title class="title hidden-xs-only">
         <router-link to="/" tag="span" style="cursor: pointer">
@@ -67,28 +67,30 @@
           Sign Out
         </v-btn>
       </v-toolbar-items>
-    </v-toolbar>
-    <main>
-      <v-container class="mt-4">
+    </v-app-bar>
+
+    <v-content>
+      <v-container fluid class="mt-4">
         <transition name="fade">
           <router-view/>
         </transition>
-
-        <!-- Auth Snackbar -->
-        <v-snackbar v-model="authSnackbar" color="success" :timeout="5000" bottom left>
-          <v-icon class="mr-3">check_circle</v-icon>
-          <h3>You are now signed in!</h3>
-          <v-btn dark text @click="authSnackbar = false">Close</v-btn>
-        </v-snackbar>
-
-        <!-- Auth Error Snackbar -->
-        <v-snackbar v-if="authError" v-model="authErrorSnackbar" color="error" :timeout="10000" bottom left>
-          <v-icon class="mr-3">cancel</v-icon>
-          <h3>{{ authError.message }}</h3>
-          <v-btn dark text to="/signin">Sign In</v-btn>
-        </v-snackbar>
       </v-container>
-    </main>
+
+      <!-- Auth Snackbar -->
+      <v-snackbar v-model="authSnackbar" color="success" :timeout="5000" bottom left>
+        <v-icon class="mr-3">check_circle</v-icon>
+        <h3>You are now signed in!</h3>
+        <v-btn dark text @click="authSnackbar = false">Close</v-btn>
+      </v-snackbar>
+
+      <!-- Auth Error Snackbar -->
+      <v-snackbar v-if="authError" v-model="authErrorSnackbar" color="error" :timeout="10000" bottom left>
+        <v-icon class="mr-3">cancel</v-icon>
+        <h3>{{ authError.message }}</h3>
+        <v-btn dark text to="/signin">Sign In</v-btn>
+      </v-snackbar>
+
+    </v-content>
   </v-app>
 </template>
 
@@ -101,7 +103,8 @@
       return {
         sideNav: false,
         authSnackbar: false,
-        authErrorSnackbar: false
+        authErrorSnackbar: false,
+        extensionHeight: 80
       };
     },
     watch: {
