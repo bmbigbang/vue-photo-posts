@@ -74,12 +74,28 @@ export default new Vuex.Store({
           .mutate({
             mutation: ADD_POST,
             variables: payload,
-            update: (cache, { data }) => {
-              console.log(cache, data);
+            update: (cache, { data: { addPost } }) => {
+              // first read the query from the cache to update
+              const data = cache.readQuery({ query: GET_POSTS });
+              // Create updated data
+              data.getPosts.unshift(addPost);
+              // Write updated data back to query
+              cache.writeQuery({
+                query: GET_POSTS,
+                data
+              })
+            },
+            // this ensures the update to data is added immediately to the cache
+            optimisticResponse: {
+              __typename: 'Mutation',
+              addPost: {
+                __typename: 'Post',
+                _id: -1,
+                ...payload
+              }
             }
           })
           .then(({ data }) => {
-            Router.go('/');
             commit('setLoading', false);
           })
           .catch(err => {
