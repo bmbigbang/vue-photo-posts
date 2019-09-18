@@ -95,75 +95,75 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
-  export default {
-    name: 'App',
-    data() {
-      return {
-        sideNav: false,
-        authSnackbar: false,
-        authErrorSnackbar: false,
-        extensionHeight: 80
-      };
-    },
-    watch: {
-      user(oldValue) {
-        // only show snackbar if previous value for user was null
-        if (oldValue) {
-          this.authSnackbar = true;
-        }
-      },
-      authError(value) {
-        if (value) {
-          this.authErrorSnackbar = true;
-        }
+export default {
+  name: 'App',
+  data() {
+    return {
+      sideNav: false,
+      authSnackbar: false,
+      authErrorSnackbar: false,
+      extensionHeight: 80
+    };
+  },
+  watch: {
+    user(oldValue) {
+      // only show snackbar if previous value for user was null
+      if (oldValue) {
+        this.authSnackbar = true;
       }
     },
-    computed: {
-      ...mapGetters(["authError", 'user']),
-      horizontalNavItems() {
-        let navButtons;
-        if (this.user) {
-          navButtons = [
-            { icon: 'chat', title: 'Posts', link: '/posts' }
-          ];
-        } else {
-          navButtons = [
-            { icon: 'chat', title: 'Posts', link: '/posts' },
-            { icon: 'lock_open', title: 'Sign In', link: '/signin' },
-            { icon: 'create', title: 'Sign Up', link: '/signup'}
-          ];
-        }
-        return navButtons;
-      },
-      sideNavItems() {
-        let sideNavButtons;
-        if (this.user) {
-          sideNavButtons = [
-            { icon: 'chat', title: 'Posts', link: '/posts' },
-            { icon: 'stars', title: 'Create Post', link: '/post/add' },
-            { icon: 'account_box', title: 'Profile', link: '/profile' }
-          ]
-        } else {
-          sideNavButtons = [
-            { icon: 'chat', title: 'Posts', link: '/posts' },
-            { icon: 'lock_open', title: 'Sign In', link: '/signin' },
-            { icon: 'create', title: 'Sign Up', link: '/signup'}
-          ]
-        }
-        return sideNavButtons;
-      }
-    },
-    methods: {
-      handleSignOutUser() {
-        this.$store.dispatch('signOutUser');
-      },
-      toggleSideNav() {
-        this.sideNav = !this.sideNav;
+    authError(value) {
+      if (value) {
+        this.authErrorSnackbar = true;
       }
     }
+  },
+  computed: {
+    ...mapGetters(["authError", 'user']),
+    horizontalNavItems() {
+      let navButtons;
+      if (this.user) {
+        navButtons = [
+          { icon: 'chat', title: 'Posts', link: '/posts' }
+        ];
+      } else {
+        navButtons = [
+          { icon: 'chat', title: 'Posts', link: '/posts' },
+          { icon: 'lock_open', title: 'Sign In', link: '/signin' },
+          { icon: 'create', title: 'Sign Up', link: '/signup'}
+        ];
+      }
+      return navButtons;
+    },
+    sideNavItems() {
+      let sideNavButtons;
+      if (this.user) {
+        sideNavButtons = [
+          { icon: 'chat', title: 'Posts', link: '/posts' },
+          { icon: 'stars', title: 'Create Post', link: '/post/add' },
+          { icon: 'account_box', title: 'Profile', link: '/profile' }
+        ]
+      } else {
+        sideNavButtons = [
+          { icon: 'chat', title: 'Posts', link: '/posts' },
+          { icon: 'lock_open', title: 'Sign In', link: '/signin' },
+          { icon: 'create', title: 'Sign Up', link: '/signup'}
+        ]
+      }
+      return sideNavButtons;
+    }
+  },
+  methods: {
+    handleSignOutUser() {
+      this.$store.dispatch('signOutUser');
+    },
+    toggleSideNav() {
+      this.sideNav = !this.sideNav;
+    }
   }
+}
 </script>
 
 <style>

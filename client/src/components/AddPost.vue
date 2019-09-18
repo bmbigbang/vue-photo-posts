@@ -9,7 +9,7 @@
     <!-- Sign up form -->
 
       <v-form v-model="isFormValid" lazy-validation ref="form"
-              @submit.prevent="handleSignUpUser">
+              @submit.prevent="handleAddPost">
 
         <!-- Title input -->
         <v-layout row>
@@ -32,7 +32,7 @@
         <!-- Image preview -->
         <v-layout row>
           <v-flex xs12>
-            <img :src="imagUrl" height="300px" alt="Image preview">
+            <img :src="imageUrl" height="300px" alt="Image preview">
           </v-flex>
         </v-layout>
 
@@ -75,6 +75,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: "addPost",
   data() {
@@ -98,6 +100,22 @@ export default {
         desc => !!desc || "Description is required",
         desc => desc.length < 200 || "Description must have less than 200 characters"
       ]
+    }
+  },
+  computed: {
+    ...mapGetters(['loading', 'user'])
+  },
+  methods: {
+    handleAddPost() {
+      if (this.$refs.form.validate()) {
+        this.$store.dispatch('addPost', {
+          title: this.title,
+          imageUrl: this.imageUrl,
+          categories: this.categories,
+          description: this.description,
+          creatorId: this.user._id
+        })
+      }
     }
   }
 }
