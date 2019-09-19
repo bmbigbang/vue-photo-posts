@@ -1,5 +1,5 @@
 <template>
-  <v-container text-center mt-4 pt-4>
+  <v-container text-center mt-6 pt-6>
     <v-layout row wrap>
       <v-flex xs12 sm6 offset-sm3 >
         <h1>Sign Up</h1>
@@ -81,53 +81,53 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+  import { mapGetters } from 'vuex';
 
-export default {
-  name: "signUp",
-  data() {
-    return {
-      isFormValid: true,
-      username: '',
-      email: '',
-      password: '',
-      passwordConfirmation: '',
-      usernameRules: [
-        username => !!username || "Username is required",
-        username => username.length <= 10 || "Username must be between 2 to 10 characters",
-        username => username.length >= 2 || "Username must be between 2 to 10 characters"
-      ],
-      emailRules: [
-        email => !!email || 'Email is required',
-        email => /.@+./.test(email) || "Email must be valid"
-      ],
-      passwordRules: [
-        password => !!password || 'Password is required',
-        password => password.length >= 4 || 'Password must be at least 4 characters',
-        confirmation => confirmation === this.password || 'Passwords must match'
-      ]
-    }
-  },
-  computed: {
-    ...mapGetters(['loading', 'error', 'user'])
-  },
-  watch: {
-    user(value) {
-      if (value) {
-        this.$router.push('/');
+  export default {
+    name: "signUp",
+    data() {
+      return {
+        isFormValid: true,
+        username: '',
+        email: '',
+        password: '',
+        passwordConfirmation: '',
+        usernameRules: [
+          username => !!username || "Username is required",
+          username => username.length <= 10 || "Username must be between 2 to 10 characters",
+          username => username.length >= 2 || "Username must be between 2 to 10 characters"
+        ],
+        emailRules: [
+          email => !!email || 'Email is required',
+          email => /.@+./.test(email) || "Email must be valid"
+        ],
+        passwordRules: [
+          password => !!password || 'Password is required',
+          password => password.length >= 4 || 'Password must be at least 4 characters',
+          confirmation => confirmation === this.password || 'Passwords must match'
+        ]
       }
-    }
-  },
-  methods: {
-    handleSignUpUser() {
-      if (this.$refs.form.validate()) {
-        this.$store.dispatch('signUpUser', {
-          username: this.username,
-          email: this.email,
-          password: this.password
-        });
+    },
+    computed: {
+      ...mapGetters(['loading', 'error', 'user'])
+    },
+    watch: {
+      user(value) {
+        if (value) {
+          this.$router.push('/');
+        }
+      }
+    },
+    methods: {
+      handleSignUpUser() {
+        if (this.$refs.form.validate()) {
+          this.$store.dispatch('signUpUser', {
+            username: this.username,
+            email: this.email,
+            password: this.password
+          });
+        }
       }
     }
   }
-}
 </script>

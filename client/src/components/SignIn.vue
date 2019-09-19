@@ -1,5 +1,5 @@
 <template>
-  <v-container text-center mt-4 pt-4>
+  <v-container text-center mt-6 pt-6>
     <v-layout row wrap>
       <v-flex xs12 sm6 offset-sm3>
         <h1>Sign In</h1>
@@ -65,48 +65,48 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+  import { mapGetters } from 'vuex'
 
-export default {
-  name: "signIn",
-  data() {
-    return {
-      isFormValid: true,
-      username: '',
-      password: '',
-      usernameRules: [
-        username => !!username || "Username is required",
-        username => username.length <= 10 || "Username must be between 2 to 10 characters",
-        username => username.length >= 2 || "Username must be between 2 to 10 characters"
-      ],
-      passwordRules: [
-        password => !!password || 'Password is required',
-        password => password.length >= 4 || 'Password must be at least 4 characters'
-      ]
-    };
-  },
-  computed: {
-    ...mapGetters(['user', 'error', 'loading'])
-  },
-  watch: {
-    user(value) {
-      if (value) {
-        this.$router.push('/');
+  export default {
+    name: "signIn",
+    data() {
+      return {
+        isFormValid: true,
+        username: '',
+        password: '',
+        usernameRules: [
+          username => !!username || "Username is required",
+          username => username.length <= 10 || "Username must be between 2 to 10 characters",
+          username => username.length >= 2 || "Username must be between 2 to 10 characters"
+        ],
+        passwordRules: [
+          password => !!password || 'Password is required',
+          password => password.length >= 4 || 'Password must be at least 4 characters'
+        ]
+      };
+    },
+    computed: {
+      ...mapGetters(['user', 'error', 'loading'])
+    },
+    watch: {
+      user(value) {
+        if (value) {
+          this.$router.push('/');
+        }
       }
-    }
-  },
-  methods: {
-    handleSignInUser() {
-      // validate using rules accessed by ref before submitting
-      if (this.$refs.form.validate()) {
-        this.$store.dispatch('signInUser', {
-          username: this.username,
-          password: this.password
-        });
+    },
+    methods: {
+      handleSignInUser() {
+        // validate using rules accessed by ref before submitting
+        if (this.$refs.form.validate()) {
+          this.$store.dispatch('signInUser', {
+            username: this.username,
+            password: this.password
+          });
+        }
       }
     }
   }
-}
 </script>
 
 <style>

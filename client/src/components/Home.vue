@@ -1,5 +1,5 @@
 <template>
-  <v-container text-center mt-4 pt-4 v-if="posts">
+  <v-container text-center mt-6 pt-6 v-if="posts">
     <v-layout row>
       <v-dialog v-model="loading" persistent fullscreen>
         <v-container fill-height>
@@ -12,7 +12,8 @@
     </v-layout>
     <v-flex xs12>
       <v-carousel v-if="!loading && posts.length" v-bind="{ 'cycle': true }" interval="3000">
-        <v-carousel-item v-for="post in posts" :key="post._id" :src="post.imageUrl">
+        <v-carousel-item v-for="post in posts" :key="post._id" :src="post.imageUrl"
+                         @click.native="goToPost(post._id)" class="carousel-link">
 <!--          <h1>{{ (function(){debugger;posts})() || "" }}</h1>-->
           <h1 id="carousel__title">{{ post.title }}</h1>
         </v-carousel-item>
@@ -22,23 +23,26 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+  import { mapGetters } from 'vuex';
 
-export default {
-  name: 'home',
-  created() {
-    this.handleGetCarouselPosts();
-  },
-  computed: {
-    ...mapGetters(['loading', 'posts'])
-  },
-  methods: {
-    handleGetCarouselPosts() {
-      // fire get posts action within VueX, relaying the state management.
-      this.$store.dispatch('getPosts');
+  export default {
+    name: 'home',
+    created() {
+      this.handleGetCarouselPosts();
+    },
+    computed: {
+      ...mapGetters(['loading', 'posts'])
+    },
+    methods: {
+      handleGetCarouselPosts() {
+        // fire get posts action within VueX, relaying the state management.
+        this.$store.dispatch('getPosts');
+      },
+      goToPost(postId) {
+        this.$router.push(`/posts/${postId}`);
+      }
     }
   }
-}
 </script>
 
 <style>
@@ -53,5 +57,9 @@ export default {
     left: 0;
     right: 0;
     text-align: center;
+  }
+
+  .carousel-link {
+    cursor: pointer;
   }
 </style>

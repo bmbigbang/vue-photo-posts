@@ -1,8 +1,8 @@
 <template>
-  <v-container fluid text-xs-center grid-list-xl mt-4 pt-4>
+  <v-container fluid text-xs-center grid-list-xl mt-6 pt-6>
     <v-layout row wrap v-if="infiniteScrollPosts">
       <v-flex xs12 sm6 v-for="post in infiniteScrollPosts.posts" :key="post._id">
-        <v-card hover>
+        <v-card @click.native="goToPost(post._id)" hover>
           <v-img :src="post.imageUrl" height="30vh" lazy></v-img>
 
           <v-card-actions>
@@ -61,56 +61,59 @@
 </template>
 
 <script>
-import { INFINITE_SCROLL_POSTS } from "../queries";
+  import { INFINITE_SCROLL_POSTS } from "../queries";
 
-const pageSize = 2;
+  const pageSize = 2;
 
-export default {
-  name: "posts",
-  data() {
-    return {
-      pageNum: 1,
-      showMoreEnabled: true,
-      showPostCreator: ""
-    }
-  },
-  apollo: {
-    infiniteScrollPosts: {
-      query: INFINITE_SCROLL_POSTS,
-      variables: {
+  export default {
+    name: "posts",
+    data() {
+      return {
         pageNum: 1,
-        pageSize
+        showMoreEnabled: true,
+        showPostCreator: ""
       }
-    }
-  },
-  methods: {
-    showMorePosts() {
-      this.pageNum += 1;
-      // fetch more data and transform the page with new results
-      this.$apollo.queries.infiniteScrollPosts.fetchMore({
+    },
+    apollo: {
+      infiniteScrollPosts: {
+        query: INFINITE_SCROLL_POSTS,
         variables: {
-          pageNum: this.pageNum,
+          pageNum: 1,
           pageSize
-        },
-        updateQuery: (prevResult, { fetchMoreResult }) => {
-          const newPosts = fetchMoreResult.infiniteScrollPosts.posts;
-          const hasMore = fetchMoreResult.infiniteScrollPosts.hasMore;
-          this.showMoreEnabled = hasMore;
+        }
+      }
+    },
+    methods: {
+      showMorePosts() {
+        this.pageNum += 1;
+        // fetch more data and transform the page with new results
+        this.$apollo.queries.infiniteScrollPosts.fetchMore({
+          variables: {
+            pageNum: this.pageNum,
+            pageSize
+          },
+          updateQuery: (prevResult, { fetchMoreResult }) => {
+            const newPosts = fetchMoreResult.infiniteScrollPosts.posts;
+            const hasMore = fetchMoreResult.infiniteScrollPosts.hasMore;
+            this.showMoreEnabled = hasMore;
 
-          return {
-            infiniteScrollPosts: {
-              __typename: prevResult.infiniteScrollPosts.__typename,
-              // Merge new posts in
-              posts: [
-                ...prevResult.infiniteScrollPosts.posts,
-                ...newPosts
-              ],
-              hasMore
+            return {
+              infiniteScrollPosts: {
+                __typename: prevResult.infiniteScrollPosts.__typename,
+                // Merge new posts in
+                posts: [
+                  ...prevResult.infiniteScrollPosts.posts,
+                  ...newPosts
+                ],
+                hasMore
+              }
             }
           }
-        }
-      })
+        })
+      },
+      goToPost(postId) {
+        this.$router.push(`/posts/${postId}`);
+      }
     }
   }
-}
 </script>
