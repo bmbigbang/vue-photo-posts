@@ -2,8 +2,9 @@
   <v-container fluid text-xs-center grid-list-xl mt-6 pt-6>
     <v-layout row wrap v-if="infiniteScrollPosts">
       <v-flex xs12 sm6 v-for="post in infiniteScrollPosts.posts" :key="post._id">
-        <v-card @click.native="goToPost(post._id)" hover>
-          <v-img :src="post.imageUrl" height="30vh" lazy></v-img>
+        <v-card hover>
+          <v-img :src="post.imageUrl" height="30vh" lazy
+                 @click.native="goToPost(post._id)"></v-img>
 
           <v-card-actions>
             <v-card-title primary>
