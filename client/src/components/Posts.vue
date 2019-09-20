@@ -24,7 +24,7 @@
 
           <v-slide-y-transition>
             <v-card-text v-show="showPostCreator === post._id" class="grey lighten-4">
-              <v-list-item avatar>
+              <v-list-item>
                 <v-list-item-avatar>
                   <img :src="post.createdBy.avatar" alt="av">
                 </v-list-item-avatar>

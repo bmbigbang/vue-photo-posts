@@ -20,9 +20,11 @@
           </v-card-title>
 
           <v-tooltip right>
-            <span>Click to enlarge image</span>
-            <v-img slot="activator" :src="getPost.imageUrl"
-                   id="post__image" @click="toggleImageDialog"></v-img>
+            <template v-slot:activator="{ on: tooltip }">
+              <span>Click to enlarge image</span>
+              <v-img :src="getPost.imageUrl"
+                     id="post__image" @click="toggleImageDialog"></v-img>
+            </template>
           </v-tooltip>
 
           <!-- Large post image dialog -->
@@ -38,15 +40,72 @@
                 {{ category }}
               </v-chip>
             </span>
+            <h3>{{ getPost.description }}</h3>
           </v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
+
+    <!-- Messages Section -->
+    <div class="mt-3">
+      <v-layout class="mb-3" v-if="user">
+        <v-flex xs12>
+          <v-form @submit.prevent="handleAddPostMessage">
+            <v-layout row>
+              <v-flex xs12>
+                <v-text-field v-model="messageBody" clearable
+                              :append-outer-icon="messageBody && 'send'"
+                              prepend-icon="email" label="Add Message"
+                              type="text" required
+                              @click:append-outer="handleAddPostMessage">
+
+                </v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-form>
+        </v-flex>
+      </v-layout>
+
+      <!-- Messages -->
+      <v-layout row wrap>
+        <v-flex xs12>
+          <v-list subheader two-line>
+            <v-subheader>Messages ({{ getPost.messages.length }})</v-subheader>
+
+            <template v-for="message in getPost.messages">
+              <v-divider :key="message._id"></v-divider>
+              <v-list-item inset :key="message.title">
+                <v-list-item-avatar>
+                  <img :src="message.messageUser.avatar">
+                </v-list-item-avatar>
+
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ message.messageBody }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    {{ message.messageUser.username }}
+                    <span class="grey--text text--lighten-1 hidden-xs-only">
+                      {{ message.messageDate }}
+                    </span>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+
+                <v-list-item-action class="hidden-xs-only">
+                  <v-icon color="grey">chat_bubble</v-icon>
+                </v-list-item-action>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-flex>
+      </v-layout>
+    </div>
+
   </v-container>
 </template>
 
 <script>
-  import { GET_POST } from '../queries'
+  import { GET_POST, ADD_POST_MESSAGE } from '../queries'
   import { mapGetters } from 'vuex'
 
   export default {
@@ -54,7 +113,8 @@
     props: ['postId'],
     data() {
       return {
-        dialog: false
+        dialog: false,
+        messageBody: '',
       }
     },
     apollo: {
@@ -78,6 +138,31 @@
         if (window.innerWidth > 500) {
           this.dialog = !this.dialog;
         }
+      },
+      handleAddPostMessage() {
+        const variables = {
+          messageBody: this.messageBody,
+          userId: this.user._id,
+          postId: this.postId
+        };
+        this.$apollo.mutate({
+          mutation: ADD_POST_MESSAGE,
+          variables,
+          update: (cache, { data: { addPostMessage } }) => {
+            const data = cache.readQuery({
+              query: GET_POST,
+              variables: { postId: this.postId }
+            });
+            data.getPost.messages.unshift(addPostMessage);
+            cache.writeQuery({
+              query: GET_POST,
+              variables: { postId: this.postId },
+              data
+            });
+          }
+        }).then(({ data }) => {
+          //console.log(data.addPostMessage);
+        }).catch(err => console.error(err))
       }
     }
   }

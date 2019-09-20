@@ -64,6 +64,21 @@ module.exports = {
         createdBy: createdById
       }).save();
     },
+    addPostMessage: async (_, { messageBody, userId, postId }, { Post }) => {
+      const newMessage = {
+        messageBody,
+        messageUser: userId
+      };
+      const post = await Post.findOneAndUpdate({ _id: postId },
+          // prepend (using $push) new message to the beginning of the array
+          { $push: { messages: { $each: [newMessage], $position: 0 } } },
+          { new: true }
+      ).populate({
+        path: 'messages.messageUser',
+        model: 'User'
+      });
+      return post.messages[0];
+    },
     signInUser: async (_parent, { username, password }, { User }) => {
       const user = await User.findOne({ username });
       if (!user) {
