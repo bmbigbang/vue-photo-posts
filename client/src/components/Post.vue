@@ -6,8 +6,9 @@
         <v-card hover>
           <v-card-title>
             <h1>{{ getPost.title }}</h1>
-            <v-btn large icon v-if="user">
-              <v-icon large color="grey">favorite</v-icon>
+            <v-btn @click="handleLikePost" large icon v-if="user">
+              <v-icon :color="checkIfPostLiked(getPost._id) ? 'red' : 'grey'"
+                      large>favorite</v-icon>
             </v-btn>
             <h3 class="ml-3 font-weight-thin">{{ getPost.likes }} Likes</h3>
 
@@ -108,7 +109,7 @@
 </template>
 
 <script>
-  import { GET_POST, ADD_POST_MESSAGE } from '../queries'
+  import {GET_POST, ADD_POST_MESSAGE, LIKE_POST, UNLIKE_POST} from '../queries'
   import { mapGetters } from 'vuex'
 
   export default {
@@ -117,6 +118,7 @@
     data() {
       return {
         dialog: false,
+        postLiked: false,
         messageBody: '',
         isFormValid: true,
         messageRules: [
@@ -136,7 +138,7 @@
       }
     },
     computed: {
-      ...mapGetters(['user'])
+      ...mapGetters(['user', 'userFavorites'])
     },
     methods: {
       goToPreviousPage() {
@@ -149,6 +151,45 @@
       },
       checkIfOwnMessage(message) {
         return this.user && (this.user._id === message.messageUser._id)
+      },
+      checkIfPostLiked(postId) {
+        if (this.userFavorites.find((fave) => fave._id === postId)) {
+          this.postLiked = true;
+          return true;
+        }
+        else {
+          this.postLiked = false;
+          return false;
+        }
+      },
+      handleLikePost() {
+        const variables = {
+          postId: this.postId,
+          username: this.user.username
+        };
+        this.$apollo.mutate({
+          mutation: (this.postLiked === true) ? UNLIKE_POST : LIKE_POST,
+          variables,
+          update: (cache, { data: { Post } }) => {
+            const data = cache.readQuery({
+              query: GET_POST,
+              variables: { postId: this.postId }
+            });
+            if (this.postLiked === true) data.getPost.likes -= 1;
+            else data.getPost.likes += 1;
+            cache.writeQuery({
+              query: GET_POST,
+              variables: { postId: this.postId },
+              data
+            })
+          }
+        }).then(({ data }) => {
+          const updatedUser = {
+            ...this.user,
+            favorites: data[(this.postLiked === true) ? "unlikePost" : "likePost"].favorites
+          };
+          this.$store.commit('setUser', updatedUser);
+        }).catch(err => console.error(err));
       },
       handleAddPostMessage() {
         if (!this.$refs.form.validate()) return;
