@@ -50,7 +50,8 @@
     <div class="mt-3">
       <v-layout class="mb-3" v-if="user">
         <v-flex xs12>
-          <v-form @submit.prevent="handleAddPostMessage">
+          <v-form :rules="messageRules" v-model="isFormValid" lazy-validation ref="form"
+                  @submit.prevent="handleAddPostMessage">
             <v-layout row>
               <v-flex xs12>
                 <v-text-field v-model="messageBody" clearable
@@ -92,7 +93,9 @@
                 </v-list-item-content>
 
                 <v-list-item-action class="hidden-xs-only">
-                  <v-icon color="grey">chat_bubble</v-icon>
+                  <v-icon :color="checkIfOwnMessage(message) ? 'accent' : 'grey'">
+                    chat_bubble
+                  </v-icon>
                 </v-list-item-action>
               </v-list-item>
             </template>
@@ -115,6 +118,11 @@
       return {
         dialog: false,
         messageBody: '',
+        isFormValid: true,
+        messageRules: [
+          message => !!message || 'Message is required',
+          message => message.length < 70 || 'Message must be less than 70 characters'
+        ]
       }
     },
     apollo: {
@@ -139,7 +147,11 @@
           this.dialog = !this.dialog;
         }
       },
+      checkIfOwnMessage(message) {
+        return this.user && (this.user._id === message.messageUser._id)
+      },
       handleAddPostMessage() {
+        if (!this.$refs.form.validate()) return;
         const variables = {
           messageBody: this.messageBody,
           userId: this.user._id,
@@ -161,7 +173,7 @@
             });
           }
         }).then(({ data }) => {
-          //console.log(data.addPostMessage);
+          this.$refs.form.reset();
         }).catch(err => console.error(err))
       }
     }
