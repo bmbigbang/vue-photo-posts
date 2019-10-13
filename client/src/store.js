@@ -6,8 +6,11 @@ import { defaultClient as apolloClient } from './main'
 
 import {
   GET_POSTS, SIGNIN_USER, GET_CURRENT_USER,
-  SIGNUP_USER, ADD_POST, SEARCH_POSTS, GET_USER_POSTS
+  SIGNUP_USER, ADD_POST, SEARCH_POSTS, GET_USER_POSTS,
+  UPDATE_USER_POST
 } from './queries'
+
+var _ = require('lodash');
 
 Vue.use(Vuex);
 
@@ -133,6 +136,22 @@ export default new Vuex.Store({
             commit('setLoading', false);
             console.error(err);
             console.dir(err);
+          })
+    },
+    updateUserPost: ({ state, commit }, payload) => {
+      apolloClient
+          .mutate({
+            mutation: UPDATE_USER_POST,
+            variables: payload
+          })
+          .then(({ data }) => {
+            const index = _.findIndex(state.userPosts, ['_id', data.updateUserPost._id]);
+            const userPosts = state.userPosts;
+            userPosts[index] = data.updateUserPost;
+            commit("setUserPosts", userPosts);
+          })
+          .catch(err => {
+            console.error(err);
           })
     },
     signInUser: ({ commit }, payload) => {

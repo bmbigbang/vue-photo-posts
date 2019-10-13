@@ -80,11 +80,19 @@ module.exports = {
     }
   },
   Mutation: {
-    addPost: async(_parent, { title, imageUrl, categories, description, createdById }, { Post }) => {
+    addPost: async (_parent, { title, imageUrl, categories, description, createdById }, { Post }) => {
       return await new Post({
         title, imageUrl, categories, description,
         createdBy: createdById
       }).save();
+    },
+    updateUserPost: async (_, { postId, userId, title, imageUrl, categories, description }, { Post }) => {
+      const post = await Post.findOneAndUpdate(
+          {_id: postId, createdBy: userId },
+          { $set: { title, imageUrl, categories, description } },
+          { new: true }
+      );
+      return post;
     },
     addPostMessage: async (_, { messageBody, userId, postId }, { Post }) => {
       const newMessage = {

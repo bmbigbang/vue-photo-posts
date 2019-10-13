@@ -13,13 +13,14 @@
   "license": "GNU GPLv3",
   "dependencies": {
     "apollo-server": "^2.0.0-rc.7",
+    "apollo-server-core": "latest",
     "bcrypt": "^3.0.0",
     "dotenv": "^6.0.0",
     "graphql": "^0.13.2",
     "jsonwebtoken": "^8.3.0",
+    "lodash": "^4.17.15",
     "md5": "^2.2.1",
-    "mongoose": "^5.2.6",
-    "apollo-server-core": "latest"
+    "mongoose": "^5.2.6"
   },
   "devDependencies": {
     "concurrently": "^3.6.0",
