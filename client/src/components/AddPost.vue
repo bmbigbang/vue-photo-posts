@@ -115,7 +115,9 @@
             description: this.description,
             creatorId: this.user._id
           });
-          this.$router.push('/');
+          setTimeout(() => {
+            this.$router.push('/');
+          }, 150);
         }
       }
     }
