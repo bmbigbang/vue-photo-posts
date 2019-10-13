@@ -13,7 +13,7 @@
             <div>
               <div>Joined {{ user.joinDate }}</div>
               <div class="hidden-xs-only font-weight-thin">{{ user.favorites.length }} Favorites</div>
-              <div class="hidden-xs-only font-weight-thin">Posts Added</div>
+              <div class="hidden-xs-only font-weight-thin">{{ userPosts.length }} Posts Added</div>
               <br/>
             </div>
           </v-flex>
@@ -54,7 +54,17 @@ import { mapGetters } from 'vuex'
 export default {
   name: "profile",
   computed: {
-    ...mapGetters(['user', 'userFavorites'])
+    ...mapGetters(['user', 'userFavorites', 'userPosts'])
+  },
+  created() {
+    this.handleGetUserPosts();
+  },
+  methods: {
+    handleGetUserPosts() {
+      this.$store.dispatch('getUserPosts', {
+        userId: this.user._id
+      });
+    }
   }
 }
 </script>

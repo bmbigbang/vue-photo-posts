@@ -6,7 +6,7 @@ import { defaultClient as apolloClient } from './main'
 
 import {
   GET_POSTS, SIGNIN_USER, GET_CURRENT_USER,
-  SIGNUP_USER, ADD_POST, SEARCH_POSTS
+  SIGNUP_USER, ADD_POST, SEARCH_POSTS, GET_USER_POSTS
 } from './queries'
 
 Vue.use(Vuex);
@@ -14,6 +14,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     posts: [],
+    userPosts: [],
     searchResults: [],
     user: null,
     loading: true,
@@ -31,6 +32,9 @@ export default new Vuex.Store({
     },
     setUser: (state, payload) => {
       state.user = payload;
+    },
+    setUserPosts: (state, payload) => {
+      state.userPosts = payload;
     },
     setLoading: (state, payload) => {
       state.loading = payload;
@@ -76,6 +80,16 @@ export default new Vuex.Store({
             console.error(err);
             console.dir(err);
           })
+    },
+    getUserPosts: ({ commit }, payload) => {
+      apolloClient.query({
+        query: GET_USER_POSTS,
+        variables: payload
+      }).then(({ data }) => {
+        commit('setUserPosts', data.getUserPosts)
+      }).catch(err => {
+        console.error(err);
+      });
     },
     searchPosts: ({ commit }, payload) => {
       apolloClient.query({
@@ -177,6 +191,7 @@ export default new Vuex.Store({
   },
   getters: {
     posts: state => state.posts,
+    userPosts: state => state.userPosts,
     searchResults: state => state.searchResults,
     loading: state => state.loading,
     user: state => state.user,
