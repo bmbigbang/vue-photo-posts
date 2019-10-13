@@ -72,7 +72,9 @@
               <v-icon>edit</v-icon>
             </v-btn>
 
-            <v-btn class="post-buttons" color="error" floating small dark>
+            <v-btn
+                class="post-buttons" color="error" floating small dark
+                @click="handleDeleteUserPost(post)">
               <v-icon>delete</v-icon>
             </v-btn>
 
@@ -212,6 +214,15 @@ export default {
         setTimeout(() => {
           this.editPostDialog = false;
         }, 120)
+      }
+    },
+    handleDeleteUserPost(post) {
+      this.loadPost(post, false);
+      const deletePost = window.confirm('Are you sure you want to delete this post?');
+      if (deletePost) {
+        this.$store.dispatch('deleteUserPost', {
+          postId: this.postId
+        });
       }
     },
     loadPost({ _id, title, imageUrl, categories, description }, editPostDialog = true) {

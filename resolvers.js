@@ -109,6 +109,10 @@ module.exports = {
       });
       return post.messages[0];
     },
+    deleteUserPost: async (_, { postId }, { Post }) => {
+      const post = await Post.findOneAndRemove({ _id: postId });
+      return post;
+    },
     likePost: async (_, { postId, username }, { Post, User }) => {
       const post = await Post.findOneAndUpdate(
         { _id: postId },

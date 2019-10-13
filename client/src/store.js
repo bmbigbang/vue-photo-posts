@@ -7,7 +7,7 @@ import { defaultClient as apolloClient } from './main'
 import {
   GET_POSTS, SIGNIN_USER, GET_CURRENT_USER,
   SIGNUP_USER, ADD_POST, SEARCH_POSTS, GET_USER_POSTS,
-  UPDATE_USER_POST
+  UPDATE_USER_POST, DELETE_USER_POST
 } from './queries'
 
 var _ = require('lodash');
@@ -153,6 +153,22 @@ export default new Vuex.Store({
           .catch(err => {
             console.error(err);
           })
+    },
+    deleteUserPost: ({ state, commit }, payload) => {
+      apolloClient
+          .mutate({
+            mutation: DELETE_USER_POST,
+            variables: payload
+          })
+          .then(({ data }) => {
+            const userPosts = _.filter(state.userPosts, post => {
+              return post._id !== data.deleteUserPost._id;
+            });
+            commit("setUserPosts", userPosts);
+          })
+          .catch(err => {
+            console.error(err);
+          });
     },
     signInUser: ({ commit }, payload) => {
       // clear error to be able to show other errors
