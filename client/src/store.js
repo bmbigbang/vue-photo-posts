@@ -42,7 +42,8 @@ export default new Vuex.Store({
       state.authError = payload;
     },
     clearUser: state => (state.user = null),
-    clearError: state => (state.error = null)
+    clearError: state => (state.error = null),
+    clearSearchResults: state => (state.searchResults = [])
   },
   actions: {
     getCurrentUser: ({ commit }) => {

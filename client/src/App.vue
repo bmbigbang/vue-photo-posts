@@ -49,11 +49,17 @@
       <!-- Search results card -->
       <v-card dark v-if="searchResults.length" id="search__card">
         <v-list>
-          <v-list-item v-for="result in searchResults" :key="result._id">
+          <v-list-item
+              v-for="result in searchResults" :key="result._id"
+              @click="goToSearchResult(result._id)">
             <v-list-item-title>
               {{ result.title }}
-              <span class="font-weight-thin">{{ result.description }}</span>
+              <span class="font-weight-thin">{{ formatDesc(result.description) }}</span>
             </v-list-item-title>
+
+            <v-list-item-action v-if="checkIfUserFav(result._id)">
+              <v-icon>favorite</v-icon>
+            </v-list-item-action>
           </v-list-item>
         </v-list>
       </v-card>
@@ -182,6 +188,17 @@
       },
       toggleSideNav() {
         this.sideNav = !this.sideNav;
+      },
+      goToSearchResult(resultId) {
+        this.searchTerm = '';
+        this.$store.commit('clearSearchResults');
+        this.$router.push(`/posts/${resultId}`);
+      },
+      formatDesc(desc) {
+        if (desc.length > 30) return desc.slice(0, 30) + "...";
+      },
+      checkIfUserFav(resultId) {
+        return this.userFavorites && this.userFavorites.some(fave => fave._id === resultId);
       },
       handleSearchPosts() {
         this.$store.dispatch('searchPosts', {
