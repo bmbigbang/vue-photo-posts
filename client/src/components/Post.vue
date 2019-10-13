@@ -22,9 +22,9 @@
 
           <v-tooltip right>
             <template v-slot:activator="{ on: tooltip }">
-              <span>Click to enlarge image</span>
               <v-img :src="getPost.imageUrl"
                      id="post__image" @click="toggleImageDialog"></v-img>
+              <span class="post-caption">Click to enlarge image</span>
             </template>
           </v-tooltip>
 
@@ -37,7 +37,7 @@
 
           <v-card-text>
             <span v-for="(category, index) in getPost.categories" :key="index">
-              <v-chip class="mb-3" color="accent" text-color="white">
+              <v-chip class="mb-3 mt-6" color="accent" text-color="white">
                 {{ category }}
               </v-chip>
             </span>
@@ -224,5 +224,12 @@
 <style scoped>
 #post__image {
   height: 400px;
+}
+
+.post-caption {
+  position: absolute;
+  float: bottom;
+  right: 50%;
+  top: 475px;
 }
 </style>
