@@ -37,7 +37,7 @@ export const GET_POST = gql`
   }
 `;
 
-export const SEARCH_POST = gql`
+export const SEARCH_POSTS = gql`
   query($searchTerm: String) {
     searchPosts(searchTerm: $searchTerm) {
       _id

@@ -41,8 +41,12 @@
 
       <v-spacer></v-spacer>
       <v-toolbar-title tag="span">Search</v-toolbar-title>
-      <v-text-field flex prepend-icon="search" placeholder="Search posts" style="margin-left: 12px"
-                    color="accent" single-line hide-details></v-text-field>
+      <v-text-field v-model="searchTerm" @input="handleSearchPosts"
+        flex prepend-icon="search" placeholder="Search posts"
+        style="margin-left: 12px" color="accent"
+        single-line hide-details>
+
+      </v-text-field>
 
       <v-spacer></v-spacer>
 
@@ -101,6 +105,7 @@
     name: 'App',
     data() {
       return {
+        searchTerm: '',
         sideNav: false,
         authSnackbar: false,
         authErrorSnackbar: false,
@@ -167,6 +172,11 @@
       },
       toggleSideNav() {
         this.sideNav = !this.sideNav;
+      },
+      handleSearchPosts() {
+        this.$store.dispatch('searchPosts', {
+          searchTerm: this.searchTerm
+        });
       }
     }
   }

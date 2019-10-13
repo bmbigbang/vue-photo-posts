@@ -16,6 +16,7 @@ const Post = require('./models/Post');
 
 // Connect to Mongo Atlas Database
 mongoose
+    .set('useCreateIndex', true)
     .connect(
         process.env.MONGO_URI,
         { useNewUrlParser: true })
