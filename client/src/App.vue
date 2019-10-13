@@ -44,9 +44,19 @@
       <v-text-field v-model="searchTerm" @input="handleSearchPosts"
         flex prepend-icon="search" placeholder="Search posts"
         style="margin-left: 12px" color="accent"
-        single-line hide-details>
+        single-line hide-details></v-text-field>
 
-      </v-text-field>
+      <!-- Search results card -->
+      <v-card dark v-if="searchResults.length" id="search__card">
+        <v-list>
+          <v-list-item v-for="result in searchResults" :key="result._id">
+            <v-list-item-title>
+              {{ result.title }}
+              <span class="font-weight-thin">{{ result.description }}</span>
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-card>
 
       <v-spacer></v-spacer>
 
@@ -132,7 +142,7 @@
       }
     },
     computed: {
-      ...mapGetters(["authError", 'user', 'userFavorites']),
+      ...mapGetters(["authError", 'user', 'userFavorites', 'searchResults']),
       horizontalNavItems() {
         let navButtons;
         if (this.user) {
@@ -201,6 +211,15 @@
   /* User Favorite Animation */
   .bounce {
     animation: bounce 1s both;
+  }
+
+  /* Search results card */
+  #search__card {
+    position: absolute;
+    width: 60vw;
+    left: 20%;
+    z-index: 8;
+    top: 100%;
   }
 
   @keyframes bounce {
