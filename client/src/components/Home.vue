@@ -10,6 +10,17 @@
         </v-container>
       </v-dialog>
     </v-layout>
+
+    <!-- Explore posts button -->
+    <v-layout class="mt-2 mb-3" row wrap v-uf="!loading">
+      <v-flex xs12>
+        <v-btn class="secondary" to="/posts" large dark>
+          Explore Posts
+        </v-btn>
+      </v-flex>
+    </v-layout>
+
+    <!-- Posts Carousel -->
     <v-flex xs12>
       <v-carousel v-if="!loading && posts.length" v-bind="{ 'cycle': true }" interval="3000">
         <v-carousel-item v-for="post in posts" :key="post._id" :src="post.imageUrl"

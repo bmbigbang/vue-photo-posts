@@ -72,7 +72,6 @@
     data() {
       return {
         pageNum: 1,
-        showMoreEnabled: true,
         showPostCreator: ""
       }
     },
@@ -83,6 +82,11 @@
           pageNum: 1,
           pageSize
         }
+      }
+    },
+    computed: {
+      showMoreEnabled() {
+        return this.infiniteScrollPosts && this.infiniteScrollPosts.hasMore;
       }
     },
     methods: {
@@ -100,7 +104,6 @@
           updateQuery: (prevResult, { fetchMoreResult }) => {
             const newPosts = fetchMoreResult.infiniteScrollPosts.posts;
             const hasMore = fetchMoreResult.infiniteScrollPosts.hasMore;
-            this.showMoreEnabled = hasMore;
 
             return {
               infiniteScrollPosts: {
