@@ -7,7 +7,7 @@ import { defaultClient as apolloClient } from './main'
 import {
   GET_POSTS, SIGNIN_USER, GET_CURRENT_USER,
   SIGNUP_USER, ADD_POST, SEARCH_POSTS, GET_USER_POSTS,
-  UPDATE_USER_POST, DELETE_USER_POST
+  UPDATE_USER_POST, DELETE_USER_POST, INFINITE_SCROLL_POSTS
 } from './queries'
 
 var _ = require('lodash');
@@ -127,7 +127,23 @@ export default new Vuex.Store({
                 _id: -1,
                 ...payload
               }
-            }
+            },
+            // Rerun the certain queries after performing mutation to update cache
+            reFetchQueries: [
+              {
+                query: INFINITE_SCROLL_POSTS,
+                variables: {
+                  pageNum: 1,
+                  pageSize: 2
+                }
+              },
+              {
+                query: GET_USER_POSTS,
+                variables: {
+                  userId: payload.creatorId || 1
+                }
+              }
+            ]
           })
           .then(({ data }) => {
             commit('setLoading', false);
