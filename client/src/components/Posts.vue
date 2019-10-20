@@ -34,7 +34,7 @@
                     {{ post.createdBy.username }}
                   </v-list-item-title>
                   <v-list-item-subtitle class="font-weight-thin">
-                    Added {{ post.createdDate }}
+                    Added {{ formatCreatedDate(post.createdDate) }}
                   </v-list-item-subtitle>
                 </v-list-item-content>
 
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+  import moment from 'moment';
   import { INFINITE_SCROLL_POSTS } from "../queries";
 
   const pageSize = 2;
@@ -85,6 +86,9 @@
       }
     },
     methods: {
+      formatCreatedDate(date) {
+        return moment(new Date(date)).format('ll');
+      },
       showMorePosts() {
         this.pageNum += 1;
         // fetch more data and transform the page with new results

@@ -88,7 +88,7 @@
                   <v-list-item-subtitle>
                     {{ message.messageUser.username }}
                     <span class="grey--text text--lighten-1 hidden-xs-only">
-                      {{ message.messageDate }}
+                      {{ getTimeFromNow(message.messageDate) }}
                     </span>
                   </v-list-item-subtitle>
                 </v-list-item-content>
@@ -109,6 +109,7 @@
 </template>
 
 <script>
+  import moment from 'moment';
   import {GET_POST, ADD_POST_MESSAGE, LIKE_POST, UNLIKE_POST} from '../queries'
   import { mapGetters } from 'vuex'
 
@@ -141,6 +142,9 @@
       ...mapGetters(['user', 'userFavorites'])
     },
     methods: {
+      getTimeFromNow(time) {
+        return moment(new Date(time)).fromNow();
+      },
       goToPreviousPage() {
         this.$router.go(-1);
       },
