@@ -3,7 +3,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
-import '@babel/polyfill'
 
 import FormAlert from './components/shared/FormAlert'
 
@@ -15,7 +14,7 @@ import VueApollo from 'vue-apollo';
 Vue.use(VueApollo);
 
 export const defaultClient = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
+  uri: 'https://vue-photo-posts.herokuapp.com/graphql',
   // include auth token with requests to back-end
   fetchOptions: {
     credentials: 'include'
