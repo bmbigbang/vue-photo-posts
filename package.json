@@ -14,7 +14,7 @@
   "dependencies": {
     "apollo-server": "^2.0.0-rc.7",
     "apollo-server-core": "latest",
-    "bcrypt": "^3.0.0",
+    "bcrypt": "^5.0.1",
     "dotenv": "^6.0.0",
     "graphql": "^0.13.2",
     "jsonwebtoken": "^8.3.0",
