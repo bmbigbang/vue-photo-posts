@@ -68,7 +68,7 @@
 
       <v-toolbar-items class="hidden-xs-only">
         <v-btn color="primary" v-for="item in horizontalNavItems" :key="item.title" :to="item.link">
-          <v-icon class="hidden-sm-only" left>{{ item.icon }}</v-icon>
+          <v-icon class="hidden-sm-only" style="padding: 0 26px;" left>{{ item.icon }}</v-icon>
           {{ item.title }}
         </v-btn>
 
